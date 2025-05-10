@@ -12,7 +12,7 @@ Step-by-step instructions on how to install and run the project locally.
 **Client:** React, TypeScript, Tailwind, Framer Motion. 
 
 ## Demo
-https://notless-todo.app/
+https://notless-todo.netlify.app
 
 
 <img width="2217" alt="Github" src="https://github.com/user-attachments/assets/d582b066-5659-4507-aa77-fa1f0a5ed15a" />
