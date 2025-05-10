@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
@@ -12,21 +12,44 @@ export type Todo = {
 };
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>(dummyTodos);
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    const storedTodos = localStorage.getItem("todos");
+    if (storedTodos) {
+      return JSON.parse(storedTodos);
+    }
+    return dummyTodos;
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // DERIVED STATE
+  const tasks = todos.filter((todo) => !todo.completed);
+
   const completedTasks = todos.filter((todo) => todo.completed);
-  const amountOfTodos = todos.length || 0;
+  const amountOfTodos = tasks.length || 0;
   const amountOfCompletedTodos =
     todos.filter((todo) => todo.completed).length || 0;
 
+  // EFFECTS
+  // Close modal when clicking outside of it
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsModalOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  // HANDLERS
   const onDelete = (id: number) => {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
-  };
-  const onEdit = (id: number) => {
-    const foundTask = todos.find((todo) => todo.id === id);
-    console.log("Editing task:", foundTask);
   };
 
   const onDone = (id: number) => {
@@ -36,6 +59,7 @@ function App() {
       )
     );
   };
+
   const onAdd = (text: string) => {
     const newTodo = {
       id: Math.floor(Math.random() * 1000),
@@ -54,7 +78,7 @@ function App() {
 
   return (
     <>
-      <main className="w-[1200px] h-[800px] bg-white rounded-4xl shadow-xl shadow-gray-200 overflow-hidden grid grid-cols-[25%_1fr_1fr] grid-rows-[80px_1fr_1fr]">
+      <main className="w-[100vw] h-[100vh] grid-cols-[1fr_1fr]  md:grid-cols-[40%_1fr_1fr] bg-white  shadow-xl shadow-gray-200 overflow-hidden grid xl:grid-cols-[25%_1fr_1fr] grid-rows-[80px_1fr_1fr] xl:h-[800px] xl:w-[1200px] xl:rounded-4xl">
         <Navbar
           amountOfTodos={amountOfTodos}
           amountOfCompletedTodos={amountOfCompletedTodos}
@@ -66,12 +90,7 @@ function App() {
           completedTasks={completedTasks}
           onAdd={onAdd}
         ></Sidebar>
-        <Todos
-          todos={todos}
-          onDelete={onDelete}
-          onDone={onDone}
-          onEdit={onEdit}
-        ></Todos>
+        <Todos todos={tasks} onDelete={onDelete} onDone={onDone}></Todos>
       </main>
       <Footer></Footer>
     </>

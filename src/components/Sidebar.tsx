@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "./Button";
 import DeletedTasksModal from "./DeletedTasksModal";
 import { AnimatePresence } from "motion/react";
@@ -36,8 +36,20 @@ export default function Sidebar({
     setTask("");
   };
 
+  useEffect(() => {
+    const handleDownKey = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        handleAddTask();
+      }
+    };
+    window.addEventListener("keydown", handleDownKey);
+    return () => {
+      window.removeEventListener("keydown", handleDownKey);
+    };
+  });
+
   return (
-    <aside className="bg-[#F9F9F9] px-[32px] py-[32px] flex flex-col gap-[32px] row-span-2">
+    <aside className="bg-[#F9F9F9] row-span-1 col-span-2 px-[32px] py-[32px] flex flex-col gap-[32px] md:row-span-2 md:col-span-1 ">
       <input
         onChange={handleInputChange}
         placeholder="Add a new task"

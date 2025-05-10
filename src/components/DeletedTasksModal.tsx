@@ -23,13 +23,13 @@ export default function DeletedTasksModal({
         onClick={(e) => e.stopPropagation()}
         className="bg-white w-[400px] h-[400px] rounded-2xl shadow-2xl p-8 flex flex-col items-center  gap-8 overflow-scroll"
       >
-        <h2 className="font-semibold text-xl">Deleted Tasks</h2>
+        <h2 className="font-semibold text-xl">Completed Tasks</h2>
         <ul className="flex flex-col gap-4 w-full">
           {completedTasks.length === 0 ? (
             <p>No completed tasks</p>
           ) : (
             completedTasks.map((task) => (
-              <li className="bg-[#F9F9F9] py-4 px-8 rounded-2xl">
+              <li key={task.id} className="bg-[#F9F9F9] py-4 px-8 rounded-2xl">
                 {task.text}
               </li>
             ))

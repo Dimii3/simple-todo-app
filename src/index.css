@@ -7,5 +7,5 @@
 }
 
 body {
-  @apply font-medium h-[100vh] w-full bg-[#ffff] flex items-center justify-center  bg-[url('/bgc.png')]  bg-top bg-no-repeat;
+  @apply font-medium h-[100vh] w-full bg-[#ffff] flex items-center justify-center  bg-[url('/bgc.webp')]  bg-top bg-no-repeat;
 }
